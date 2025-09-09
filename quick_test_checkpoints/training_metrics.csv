@@ -1,0 +1,2 @@
+epoch,time,learning_rate,train_loss,train_seg_loss,train_cls_loss,valid_batches,total_batches,nan_batches,nan_ratio,val_loss,val_seg_loss,val_cls_loss,val_seg_acc,val_cls_acc
+1,98.016606092453,0.0002,2.44327935218811,1.6394828987121581,1.607592830657959,5,5,0,0.0,2.4269464015960693,1.613828182220459,1.6262364149093629,0.19969308035714287,0.15
