@@ -1,0 +1,3 @@
+2025-09-12 04:47:23,021 - UTKFaceSegmentation - INFO - __init__:429 - Using device: cpu
+2025-09-12 04:47:23,021 - UTKFaceSegmentation - INFO - display_banner:457 - UTKFace Segmentation Comparison Framework initialized
+2025-09-12 04:47:30,862 - UTKFaceSegmentation - INFO - select_models_interactive:516 - Selected models: ['EnhancedFaceSegmentationWithRaceNet']
