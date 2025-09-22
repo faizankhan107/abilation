@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthBot - Your Healthcare Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Medical Disclaimer Modal -->
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h2>
+            </div>
+            <div class="modal-body">
+                <p><strong>This chatbot is for informational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment.</strong></p>
+                <ul>
+                    <li>Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</li>
+                    <li>Never disregard professional medical advice or delay seeking it because of something you have read here.</li>
+                    <li>If you think you may have a medical emergency, call your doctor or 911 immediately.</li>
+                    <li>This chatbot does not provide medical diagnosis or treatment recommendations.</li>
+                </ul>
+                <p><strong>Emergency Contacts:</strong></p>
+                <p>🚨 Emergency: 911 | ☎️ Poison Control: 1-800-222-1222 | 🩺 Mental Health Crisis: 988</p>
+            </div>
+            <div class="modal-footer">
+                <button id="acceptDisclaimer" class="btn-primary">I Understand and Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1>HealthBot</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="emergencyBtn" class="emergency-btn">
+                        <i class="fas fa-phone"></i> Emergency
+                    </button>
+                    <button id="settingsBtn" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="chat">
+                <i class="fas fa-comments"></i> Chat
+            </button>
+            <button class="nav-tab" data-tab="symptoms">
+                <i class="fas fa-stethoscope"></i> Symptoms
+            </button>
+            <button class="nav-tab" data-tab="appointments">
+                <i class="fas fa-calendar-check"></i> Appointments
+            </button>
+            <button class="nav-tab" data-tab="records">
+                <i class="fas fa-file-medical"></i> Records
+            </button>
+            <button class="nav-tab" data-tab="info">
+                <i class="fas fa-info-circle"></i> Health Info
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Chat Tab -->
+            <div id="chat" class="tab-content active">
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <p>Hello! I'm HealthBot, your healthcare assistant. How can I help you today?</p>
+                                <small class="timestamp"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <div class="quick-actions">
+                            <button class="quick-btn" data-message="I have symptoms">🤒 Symptoms</button>
+                            <button class="quick-btn" data-message="Schedule appointment">📅 Appointment</button>
+                            <button class="quick-btn" data-message="Health tips">💡 Health Tips</button>
+                        </div>
+                        <div class="input-area">
+                            <input type="text" id="chatInput" placeholder="Type your message here..." maxlength="500">
+                            <button id="sendBtn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Symptoms Tab -->
+            <div id="symptoms" class="tab-content">
+                <div class="symptoms-checker">
+                    <h2>Symptom Checker</h2>
+                    <p class="disclaimer-text">
+                        <i class="fas fa-exclamation-circle"></i>
+                        This tool provides general information only. Consult a healthcare professional for proper diagnosis.
+                    </p>
+                    
+                    <div class="symptom-form">
+                        <div class="form-group">
+                            <label for="symptomInput">Describe your symptoms:</label>
+                            <textarea id="symptomInput" placeholder="Please describe what you're experiencing..." rows="4"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="symptomDuration">How long have you been experiencing these symptoms?</label>
+                            <select id="symptomDuration">
+                                <option value="">Select duration</option>
+                                <option value="hours">A few hours</option>
+                                <option value="1-2days">1-2 days</option>
+                                <option value="3-7days">3-7 days</option>
+                                <option value="1-2weeks">1-2 weeks</option>
+                                <option value="weeks">More than 2 weeks</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="severityLevel">Rate your discomfort level (1-10):</label>
+                            <input type="range" id="severityLevel" min="1" max="10" value="5">
+                            <span id="severityValue">5</span>
+                        </div>
+                        
+                        <button id="checkSymptomsBtn" class="btn-primary">Check Symptoms</button>
+                    </div>
+                    
+                    <div id="symptomResults" class="results-container" style="display: none;">
+                        <h3>Symptom Analysis Results</h3>
+                        <div id="symptomAnalysis"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointments Tab -->
+            <div id="appointments" class="tab-content">
+                <div class="appointments-section">
+                    <h2>Appointment Scheduling</h2>
+                    
+                    <div class="appointment-form">
+                        <div class="form-group">
+                            <label for="appointmentType">Appointment Type:</label>
+                            <select id="appointmentType">
+                                <option value="">Select type</option>
+                                <option value="general">General Consultation</option>
+                                <option value="followup">Follow-up</option>
+                                <option value="checkup">Regular Check-up</option>
+                                <option value="specialist">Specialist Consultation</option>
+                                <option value="emergency">Urgent Care</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="preferredDate">Preferred Date:</label>
+                            <input type="date" id="preferredDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="preferredTime">Preferred Time:</label>
+                            <select id="preferredTime">
+                                <option value="">Select time</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="appointmentReason">Reason for Visit:</label>
+                            <textarea id="appointmentReason" placeholder="Brief description of your concern..." rows="3"></textarea>
+                        </div>
+                        
+                        <button id="scheduleBtn" class="btn-primary">Schedule Appointment</button>
+                    </div>
+                    
+                    <div class="upcoming-appointments">
+                        <h3>Upcoming Appointments</h3>
+                        <div id="appointmentsList">
+                            <p class="no-appointments">No upcoming appointments scheduled.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Records Tab -->
+            <div id="records" class="tab-content">
+                <div class="health-records">
+                    <h2>Health Records</h2>
+                    
+                    <div class="records-section">
+                        <h3>Vital Signs Tracking</h3>
+                        <div class="vitals-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="bloodPressure">Blood Pressure:</label>
+                                    <input type="text" id="bloodPressure" placeholder="120/80">
+                                </div>
+                                <div class="form-group">
+                                    <label for="heartRate">Heart Rate (bpm):</label>
+                                    <input type="number" id="heartRate" placeholder="72">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="temperature">Temperature (°F):</label>
+                                    <input type="number" id="temperature" step="0.1" placeholder="98.6">
+                                </div>
+                                <div class="form-group">
+                                    <label for="weight">Weight (lbs):</label>
+                                    <input type="number" id="weight" placeholder="150">
+                                </div>
+                            </div>
+                            <button id="saveVitalsBtn" class="btn-primary">Save Vitals</button>
+                        </div>
+                    </div>
+                    
+                    <div class="records-section">
+                        <h3>Medication Reminders</h3>
+                        <div class="medication-form">
+                            <div class="form-group">
+                                <label for="medicationName">Medication Name:</label>
+                                <input type="text" id="medicationName" placeholder="Enter medication name">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dosage">Dosage:</label>
+                                    <input type="text" id="dosage" placeholder="e.g., 10mg">
+                                </div>
+                                <div class="form-group">
+                                    <label for="frequency">Frequency:</label>
+                                    <select id="frequency">
+                                        <option value="once">Once daily</option>
+                                        <option value="twice">Twice daily</option>
+                                        <option value="thrice">Three times daily</option>
+                                        <option value="asneeded">As needed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="addMedicationBtn" class="btn-primary">Add Medication</button>
+                        </div>
+                        
+                        <div id="medicationList" class="medication-list">
+                            <p class="no-medications">No medications added yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Info Tab -->
+            <div id="info" class="tab-content">
+                <div class="health-info">
+                    <h2>Health Information & Tips</h2>
+                    
+                    <div class="info-categories">
+                        <div class="info-card" data-category="general">
+                            <i class="fas fa-heart"></i>
+                            <h3>General Health</h3>
+                            <p>Tips for maintaining overall wellness</p>
+                        </div>
+                        <div class="info-card" data-category="nutrition">
+                            <i class="fas fa-apple-alt"></i>
+                            <h3>Nutrition</h3>
+                            <p>Healthy eating guidelines and tips</p>
+                        </div>
+                        <div class="info-card" data-category="exercise">
+                            <i class="fas fa-dumbbell"></i>
+                            <h3>Exercise</h3>
+                            <p>Physical activity recommendations</p>
+                        </div>
+                        <div class="info-card" data-category="mental">
+                            <i class="fas fa-brain"></i>
+                            <h3>Mental Health</h3>
+                            <p>Mental wellness and stress management</p>
+                        </div>
+                        <div class="info-card" data-category="prevention">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Prevention</h3>
+                            <p>Preventive care and screenings</p>
+                        </div>
+                        <div class="info-card" data-category="emergency">
+                            <i class="fas fa-first-aid"></i>
+                            <h3>First Aid</h3>
+                            <p>Basic first aid and emergency care</p>
+                        </div>
+                    </div>
+                    
+                    <div id="infoContent" class="info-content">
+                        <h3>Select a category above to view health information</h3>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Emergency Modal -->
+        <div id="emergencyModal" class="modal">
+            <div class="modal-content emergency-modal">
+                <div class="modal-header emergency-header">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Emergency Information</h2>
+                    <button class="close-btn" id="closeEmergency">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="emergency-contacts">
+                        <h3>Emergency Contacts</h3>
+                        <div class="contact-grid">
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <strong>Emergency Services</strong>
+                                <a href="tel:911">911</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-poison"></i>
+                                <strong>Poison Control</strong>
+                                <a href="tel:1-800-222-1222">1-800-222-1222</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-brain"></i>
+                                <strong>Mental Health Crisis</strong>
+                                <a href="tel:988">988</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-hospital"></i>
+                                <strong>Hospital Locator</strong>
+                                <button onclick="findNearestHospital()">Find Nearest</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-signs">
+                        <h3>When to Call 911</h3>
+                        <ul>
+                            <li>Chest pain or pressure</li>
+                            <li>Difficulty breathing</li>
+                            <li>Severe bleeding</li>
+                            <li>Loss of consciousness</li>
+                            <li>Severe allergic reaction</li>
+                            <li>Signs of stroke (F.A.S.T.)</li>
+                            <li>Suicidal thoughts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
